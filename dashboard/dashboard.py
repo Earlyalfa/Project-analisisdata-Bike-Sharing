@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+import os
 
 # 1. SET PAGE CONFIG
 st.set_page_config(
@@ -34,10 +35,15 @@ st.markdown("""
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv("main_data.csv")
+        # Mencari lokasi folder tempat file dashboard.py ini berada
+        current_dir = os.path.dirname(__file__)
+        path = os.path.join(current_dir, "main_data.csv")
+        
+        df = pd.read_csv(path)
         df['dteday'] = pd.to_datetime(df['dteday'])
         return df
-    except:
+    except Exception as e:
+        st.error(f"Gagal memuat data: {e}")
         return None
 
 df = load_data()
